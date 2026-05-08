@@ -1,4 +1,4 @@
-a# Aplikasi Manajemen Bengkel Lathifah
+# Aplikasi Manajemen Bengkel Lathifah
 
 Aplikasi desktop berbasis Java Swing untuk mengelola operasional bengkel otomotif. Sistem ini dirancang untuk memudahkan pengelolaan data pelanggan, produk, transaksi, laporan, dan statistik bengkel.
 
