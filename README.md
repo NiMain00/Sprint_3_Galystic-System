@@ -146,34 +146,7 @@ Jika berhasil reply, maka koneksi jaringan sudah aktif.
 
 ## Cara Menjalankan Aplikasi
 
-### Metode 1: Jalankan dari Main.java (Direkomendasikan)
-1. Pastikan JDK terinstall dan PATH sudah dikonfigurasi
-2. Buka terminal/command prompt
-3. Navigasi ke folder proyek:
-   ```bash
-   cd "c:\KULIAH\App Bengkel Lathifah"
-   ```
-4. Jalankan aplikasi:
-   ```bash
-   java -cp "bin;lib/*" Main
-   ```
-
-### Metode 2: Compile dan Jalankan Manual
-```bash
-# Compile semua file Java (termasuk subfolder package)
-# Pastikan folder bin/ sudah ada (kalau tidak, buat manual)
-javac -cp "lib/*" -d bin $(dir /b /s src\*.java)
-
-# Jika command $(...) tidak didukung di shell kamu, gunakan alternatif:
-# 1) Compile dengan IDE (Run/Build) atau
-# 2) Copy semua *.java ke satu folder sementara.
-
-
-# Jalankan aplikasi
-java -cp "bin;lib/*" Main
-```
-
-### Metode 3: Jalankan Melalui File `.exe`
+### Metode 1: Jalankan Melalui File `.exe` (Direkomendasikan)
 
 Aplikasi juga dapat dijalankan langsung menggunakan file executable (`.exe`) tanpa perlu membuka terminal atau IDE.
 
@@ -201,6 +174,35 @@ run.exe
 (sesuaikan dengan nama file executable pada proyek)
 
 ---
+
+### Metode 2: Jalankan dari Main.java
+1. Pastikan JDK terinstall dan PATH sudah dikonfigurasi
+2. Buka terminal/command prompt
+3. Navigasi ke folder proyek:
+   ```bash
+   cd "c:\KULIAH\App Bengkel Lathifah"
+   ```
+4. Jalankan aplikasi:
+   ```bash
+   java -cp "bin;lib/*" Main
+   ```
+
+### Metode 3: Compile dan Jalankan Manual
+```bash
+# Compile semua file Java (termasuk subfolder package)
+# Pastikan folder bin/ sudah ada (kalau tidak, buat manual)
+javac -cp "lib/*" -d bin $(dir /b /s src\*.java)
+
+# Jika command $(...) tidak didukung di shell kamu, gunakan alternatif:
+# 1) Compile dengan IDE (Run/Build) atau
+# 2) Copy semua *.java ke satu folder sementara.
+
+
+# Jalankan aplikasi
+java -cp "bin;lib/*" Main
+```
+
+
 
 #### Catatan
 
