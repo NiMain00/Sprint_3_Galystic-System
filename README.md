@@ -84,33 +84,6 @@ Buka port `3306` untuk protokol TCP melalui Windows Firewall:
    - Private
    - Public
 8. Beri nama rule:
-   ```text
-   MySQL Port 3306
-   
-### 4. Konfigurasi Multi User (Jaringan LAN)
-
-Aplikasi mendukung penggunaan multi user dalam satu jaringan lokal (LAN).
-
-Agar komputer client dapat terhubung ke database server, lakukan langkah berikut pada komputer server database:
-
-#### a. Aktifkan Port MySQL pada Firewall
-
-Buka port `3306` untuk protokol TCP melalui Windows Firewall:
-
-1. Buka **Windows Defender Firewall**
-2. Pilih **Advanced Settings**
-3. Masuk ke menu **Inbound Rules**
-4. Klik **New Rule**
-5. Pilih:
-   - Rule Type: `Port`
-   - Protocol: `TCP`
-   - Port: `3306`
-6. Pilih **Allow the connection**
-7. Centang semua profile:
-   - Domain
-   - Private
-   - Public
-8. Beri nama rule:
 
 ```text
 MySQL Port 3306
