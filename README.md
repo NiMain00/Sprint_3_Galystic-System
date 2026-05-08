@@ -60,6 +60,116 @@ db.user=USERNAME_MYSQL
 db.password=PASSWORD_MYSQL
 ```
 
+### 4. Konfigurasi Multi User (Jaringan LAN)
+
+Aplikasi mendukung penggunaan multi user dalam satu jaringan lokal (LAN).
+
+Agar komputer client dapat terhubung ke database server, lakukan langkah berikut pada komputer server database:
+
+#### a. Aktifkan Port MySQL pada Firewall
+
+Buka port `3306` untuk protokol TCP melalui Windows Firewall:
+
+1. Buka **Windows Defender Firewall**
+2. Pilih **Advanced Settings**
+3. Masuk ke menu **Inbound Rules**
+4. Klik **New Rule**
+5. Pilih:
+   - Rule Type: `Port`
+   - Protocol: `TCP`
+   - Port: `3306`
+6. Pilih **Allow the connection**
+7. Centang semua profile:
+   - Domain
+   - Private
+   - Public
+8. Beri nama rule:
+   ```text
+   MySQL Port 3306
+   
+### 4. Konfigurasi Multi User (Jaringan LAN)
+
+Aplikasi mendukung penggunaan multi user dalam satu jaringan lokal (LAN).
+
+Agar komputer client dapat terhubung ke database server, lakukan langkah berikut pada komputer server database:
+
+#### a. Aktifkan Port MySQL pada Firewall
+
+Buka port `3306` untuk protokol TCP melalui Windows Firewall:
+
+1. Buka **Windows Defender Firewall**
+2. Pilih **Advanced Settings**
+3. Masuk ke menu **Inbound Rules**
+4. Klik **New Rule**
+5. Pilih:
+   - Rule Type: `Port`
+   - Protocol: `TCP`
+   - Port: `3306`
+6. Pilih **Allow the connection**
+7. Centang semua profile:
+   - Domain
+   - Private
+   - Public
+8. Beri nama rule:
+
+```text
+MySQL Port 3306
+```
+
+> Pastikan tidak ada rule firewall lain yang memblokir port MySQL.
+
+---
+
+#### b. Izinkan MySQL Diakses dari Jaringan
+
+Edit konfigurasi MySQL agar menerima koneksi dari perangkat lain dalam jaringan.
+
+Pada file konfigurasi MySQL (`my.ini` atau `my.cnf`), ubah:
+
+```ini
+bind-address=0.0.0.0
+```
+
+Kemudian restart service MySQL/MariaDB.
+
+---
+
+#### c. Gunakan IP Komputer Server Database
+
+Pada file `db.properties` di komputer client, ubah:
+
+```properties
+db.host=192.168.1.10
+db.port=3306
+db.name=bengkel_lathifah
+db.user=USERNAME_MYSQL
+db.password=PASSWORD_MYSQL
+```
+
+Ganti `192.168.1.10` dengan IP komputer server database.
+
+Untuk melihat IP server:
+
+```bash
+ipconfig
+```
+
+Gunakan alamat IPv4 dari komputer server.
+
+---
+
+#### d. Pastikan Semua Komputer Satu Jaringan
+
+- Semua perangkat harus berada pada jaringan WiFi/LAN yang sama
+- Pastikan komputer client dapat melakukan ping ke server database
+
+Contoh:
+
+```bash
+ping 192.168.1.10
+```
+
+Jika berhasil reply, maka koneksi jaringan sudah aktif.
 
 ## Cara Menjalankan Aplikasi
 
