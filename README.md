@@ -173,6 +173,50 @@ javac -cp "lib/*" -d bin $(dir /b /s src\*.java)
 java -cp "bin;lib/*" Main
 ```
 
+### Metode 3: Jalankan Melalui File `.exe`
+
+Aplikasi juga dapat dijalankan langsung menggunakan file executable (`.exe`) tanpa perlu membuka terminal atau IDE.
+
+#### Langkah Menjalankan
+
+1. Pastikan:
+   - Java JDK/JRE sudah terinstall
+   - Database MySQL/MariaDB aktif
+   - File `db.properties` sudah dikonfigurasi dengan benar
+
+2. Buka folder aplikasi
+
+3. Jalankan file:
+
+```text
+App Bengkel Lathifah.exe
+```
+
+atau
+
+```text
+run.exe
+```
+
+(sesuaikan dengan nama file executable pada proyek)
+
+---
+
+#### Catatan
+
+- File `.exe` hanya berjalan di sistem operasi Windows
+- Jika muncul error Java Runtime:
+  - Pastikan Java sudah terinstall
+  - Cek dengan command:
+
+```bash
+java -version
+```
+
+- Untuk penggunaan multi user:
+  - Pastikan komputer client dan server database berada pada jaringan yang sama
+  - Pastikan konfigurasi IP database pada `db.properties` sudah benar
+
 
 ## Akun Login untuk Testing
 
@@ -203,8 +247,8 @@ App Bengkel Lathifah/
 │   └── model/                    # Model classes
 ├── bin/                          # Compiled classes
 ├── lib/                          # External libraries
-├── bengkel_lathifah.sql           # Database schema
-
+├── bengkel_lathifah.sql          # Database schema
+├── Galystic System.exe           # File exe
 └── README.md                     # Dokumentasi ini
 ```
 
