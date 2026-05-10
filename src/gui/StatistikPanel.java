@@ -2,7 +2,11 @@
 package gui;
 
 import dao.LaporanDAO;
-import static gui.PenggunaPanel.*;
+import gui.PenggunaPanel;
+
+import java.awt.event.*;
+
+
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -11,12 +15,44 @@ import javax.swing.*;
 
 public class StatistikPanel extends JPanel {
 
+    private static JLabel createLabel(String text) {
+        JLabel lbl = new JLabel(text);
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lbl.setForeground(ThemeManager.getTEXT_SECONDARY());
+        return lbl;
+    }
+
+    private static JTextField createTextField() {
+        JTextField tf = new JTextField(15);
+        tf.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tf.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(ThemeManager.getBORDER_COLOR()),
+            BorderFactory.createEmptyBorder(5, 8, 5, 8)));
+        tf.setBackground(ThemeManager.getCARD_BG());
+        tf.setForeground(ThemeManager.getTEXT_PRIMARY());
+        return tf;
+    }
+
+    private static JButton createButton(String text, Color bg) {
+        JButton btn = new JButton(text);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btn.setBackground(bg);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setPreferredSize(new Dimension(90, 32));
+        return btn;
+    }
+
     private JTextField txtTahun;
     private JComboBox<String> cmbTipe;
+    private JComboBox<String> cmbMode;
     private JPanel chartPanel;
     private LaporanDAO dao = new LaporanDAO();
     private DecimalFormat df = new DecimalFormat("#,##0");
     private Map<String, Double> currentData;
+
 
     public StatistikPanel() {
         setLayout(new BorderLayout(15, 15));
@@ -37,14 +73,23 @@ filterPanel.setBackground(ThemeManager.getCARD_BG());
         filterPanel.add(txtTahun);
 
         filterPanel.add(createLabel("Tipe:"));
-cmbTipe = new JComboBox<>(new String[]{"Semua", "Campuran", "Barang", "Jasa"});
+        cmbTipe = new JComboBox<>(new String[]{"Semua", "Campuran", "Barang", "Jasa"});
         cmbTipe.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         cmbTipe.setRenderer(new TransaksiPanel.ComboBoxRenderer());
         filterPanel.add(cmbTipe);
 
+        // Mode pilih (dropdown)
+        filterPanel.add(createLabel("Mode:"));
+        cmbMode = new JComboBox<>(new String[]{"Bulanan", "Tahunan (12 tahun)"});
+        cmbMode.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        cmbMode.setRenderer(new TransaksiPanel.ComboBoxRenderer());
+        filterPanel.add(cmbMode);
+
         JButton btnGenerate = createButton("Generate", DashboardFrame.PRIMARY);
         btnGenerate.addActionListener(e -> generateChart());
         filterPanel.add(btnGenerate);
+
+
 
         // Chart panel
         chartPanel = new JPanel() {
@@ -65,20 +110,37 @@ chartPanel.setBackground(ThemeManager.getCARD_BG());
         add(chartPanel, BorderLayout.CENTER);
 
         generateChart();
+
     }
+
 
     private void generateChart() {
         try {
             int tahun = Integer.parseInt(txtTahun.getText().trim());
             String tipe = (String) cmbTipe.getSelectedItem();
-            currentData = dao.getStatistikBulanan(tahun, tipe);
+            String mode = (String) cmbMode.getSelectedItem();
+
+            boolean tahunan = mode != null && mode.startsWith("Tahunan");
+
+            if (tahunan) {
+                currentData = dao.getStatistikTahunan(tahun, tipe);
+            } else {
+                currentData = dao.getStatistikBulanan(tahun, tipe);
+            }
             chartPanel.repaint();
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Tahun harus berupa angka!");
         }
     }
 
+
+
+
+    private boolean lastTahunan = false;
+
+
     private void drawChart(Graphics2D g2d) {
+
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         int w = chartPanel.getWidth();
@@ -90,7 +152,20 @@ chartPanel.setBackground(ThemeManager.getCARD_BG());
         // Title
         g2d.setFont(new Font("Segoe UI", Font.BOLD, 18));
         g2d.setColor(DashboardFrame.PRIMARY);
-        String title = "Statistik Pendapatan Tahun " + txtTahun.getText() + " - " + cmbTipe.getSelectedItem();
+
+        // Mode ditentukan oleh tombol terakhir (hardcode title sesuai isi chart)
+        // Jika ingin benar-benar dinamis, simpan flag tahunan ke field.
+        // Untuk saat ini, pastikan generateChart dipanggil sesuai tombol.
+        String mode = (currentData != null && !currentData.containsKey("Jan") ? "Tahunan" : "Bulanan");
+
+
+        String title;
+        if (mode != null && mode.startsWith("Tahunan")) {
+            title = "Statistik Pendapatan (12 Tahun) hingga " + txtTahun.getText() + " - " + cmbTipe.getSelectedItem();
+        } else {
+            title = "Statistik Pendapatan Tahun " + txtTahun.getText() + " - " + cmbTipe.getSelectedItem();
+        }
+
         FontMetrics fm = g2d.getFontMetrics();
         g2d.drawString(title, (w - fm.stringWidth(title)) / 2, 35);
 

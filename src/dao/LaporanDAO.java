@@ -73,6 +73,7 @@ public class LaporanDAO {
 
     // Statistik bulanan
     public Map<String, Double> getStatistikBulanan(int tahun, String tipe) {
+
         Map<String, Double> map = new LinkedHashMap<>();
         String[] bulanNama = {"Jan", "Feb", "Mar", "Apr", "Mei", "Jun",
                               "Jul", "Ags", "Sep", "Okt", "Nov", "Des"};
@@ -102,6 +103,44 @@ public class LaporanDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return map;
+    }
+
+    // Statistik tahunan (12 tahun terakhir, berbasis tahun akhir)
+    public Map<String, Double> getStatistikTahunan(int tahunAkhir, String tipe) {
+        Map<String, Double> map = new LinkedHashMap<>();
+
+        int tahunAwal = tahunAkhir - 11;
+        for (int t = tahunAwal; t <= tahunAkhir; t++) {
+            map.put(String.valueOf(t), 0.0);
+        }
+
+        String sql = "SELECT YEAR(tanggal) AS tahun, SUM(total_harga) AS total " +
+                     "FROM transaksi " +
+                     "WHERE YEAR(tanggal) BETWEEN ? AND ? ";
+        if (!tipe.equals("Semua")) {
+            sql += "AND tipe_transaksi = ? ";
+        }
+        sql += "GROUP BY YEAR(tanggal) ORDER BY YEAR(tanggal)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, tahunAwal);
+            ps.setInt(2, tahunAkhir);
+            if (!tipe.equals("Semua")) {
+                ps.setString(3, tipe);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int tahun = rs.getInt("tahun");
+                double total = rs.getDouble("total");
+                map.put(String.valueOf(tahun), total);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return map;
     }
 
